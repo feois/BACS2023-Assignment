@@ -13,7 +13,7 @@ public class Product {
         int newID = categoryNewID.getOrDefault(category, 1000);
         categoryNewID.put(category, newID + 1);
 
-        productID = category.getCategoryCode() + String.format("%05d", newID);
+        productID = category.getCategoryCode() + String.format("%04d", newID);
         this.productName = productName;
         this.description = description;
         this.price = price;
