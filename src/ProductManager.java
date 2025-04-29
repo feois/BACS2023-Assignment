@@ -2,41 +2,61 @@ import java.io.*;
 import java.util.*;
 
 public class ProductManager {
-    private final List<Product> products;
-    private final Map<Category, List<Product>> categories;
+    private static final List<Product> products = new ArrayList<>();
+    private static final Map<Category, List<Product>> categories = new HashMap<>();
 
-    public ProductManager() {
-        products = new ArrayList<>();
-        categories = new HashMap<>();
-    }
-
-    public ProductManager(File file) throws FileNotFoundException {
-        this();
-
+    public static void readFromFile(File file) throws IOException {
         var reader = new BufferedReader(new FileReader(file));
+        var s = reader.readLine();
 
-        // TODO
+        while (s != null) {
+            var id = s;
+            var name = reader.readLine();
+            var desc = reader.readLine();
+            var price = Double.parseDouble(reader.readLine());
+            var category = CategoryManager.getCategory(reader.readLine().charAt(0));
+
+            addProduct(new Product(id, name, desc, price, category));
+
+            s = reader.readLine();
+        }
+
+        reader.close();
     }
 
-    public void addProduct(Product product) {
+    public static void addProduct(Product product) {
         products.add(product);
         categories.putIfAbsent(product.category, new ArrayList<>());
         categories.get(product.category).add(product);
     }
 
-    public List<Product> getProducts(Category category) {
+    public static List<Product> getProducts(Category category) {
         return Collections.unmodifiableList(categories.get(category));
     }
 
-    public List<Product> searchProduct(String name) {
+    public static List<Product> searchProduct(String name) {
         return products.stream().filter(p -> p.productName.contains(name)).toList();
     }
 
-    public List<Product> searchProduct(String name, Category category) {
+    public static List<Product> searchProduct(String name, Category category) {
         return searchProduct(name).stream().filter(p -> p.category == category).toList();
     }
 
-    public void saveToFile(File file) {
-        // TODO
+    public static void saveToFile(File file) throws IOException {
+        var writer = new BufferedWriter(new FileWriter(file));
+
+        for (var prod : products) {
+            writer.write(prod.getProductID());
+            writer.newLine();
+            writer.write(prod.productName);
+            writer.newLine();
+            writer.write(prod.description);
+            writer.newLine();
+            writer.write(Double.toString(prod.price));
+            writer.newLine();
+            writer.write(String.valueOf(prod.category.getCategoryCode()));
+        }
+
+        writer.close();
     }
 }
