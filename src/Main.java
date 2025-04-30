@@ -1,21 +1,21 @@
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class Main {
     public static void readFiles() {
         try {
             CategoryManager.readFromFile(new File(""));
         }
-        catch (IOException e) {
-
-        }
+        catch (IOException ignored) {}
 
         try {
             ProductManager.readFromFile(new File(""));
         }
-        catch (IOException e) {
+        catch (IOException ignored) {}
 
+        try {
+            UserManager.readFromFile(new File(""));
         }
+        catch (IOException ignored) {}
     }
 
     public static void saveFiles() {
@@ -25,9 +25,13 @@ public class Main {
     public static void main(String[] args) {
         readFiles();
 
-        var ui = new LoginUI();
+        UI ui = new LoginUI();
 
-        ui.run();
+        while (ui != null) {
+            ui = ui.run();
+        }
+
+        new ExitUI().run();
 
         saveFiles();
     }

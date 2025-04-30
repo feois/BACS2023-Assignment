@@ -23,5 +23,10 @@ public class Customer extends User {
     public List<Order> getOrderHistory(){
         return Collections.unmodifiableList(history);
     }
+
+    @Override
+    public String getUserType() {
+        return "Customer";
+    }
 }
 

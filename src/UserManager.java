@@ -1,27 +1,43 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 import java.io.*;
 import java.util.HashMap;
 
 public class UserManager {
     private static final HashMap<String, User> users = new HashMap<>();
 
-    private static void loadFromFile(File file) {
-    }
-    
-    public static boolean register(User user) {
-        if (users.containsKey(user.getUsername())) {
-            return false;
-        } else {
-            users.put(user.getUsername(), user);
-            return true;
-        }
+    public static boolean hasUser() {
+        return !users.isEmpty();
     }
 
-    private static void saveToFile(File file) {
+    public static boolean hasUser(String username) {
+        return users.get(username) != null;
+    }
+
+    public static User login(String username, String password) {
+        var user = users.get(username);
+
+        if (user != null) {
+            if (!user.checkPassword(password)) {
+                user = null;
+            }
+        }
+
+        return user;
+    }
+    
+    public static void register(User user) {
+        if (users.containsKey(user.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        users.put(user.getUsername(), user);
+    }
+
+    public static void readFromFile(File file) throws IOException {
+        // TODO
+    }
+
+    public static void saveToFile(File file) throws IOException {
+        // TODO
     }
 }
 

@@ -4,8 +4,9 @@ public abstract class UI {
     private static final Scanner scanner = new Scanner(System.in);
     private static String screen = "";
     private static String pendingInput = "";
+    private static boolean autoAccept = false;
 
-    private static void clearScreen() {
+    private void clearScreen() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
@@ -17,149 +18,270 @@ public abstract class UI {
         catch (Exception ignored) {}
     }
 
-    public static void clear() {
+    public final String getScreen() {
+        return screen;
+    }
+
+    public final void clear() {
         screen = "";
         clearScreen();
     }
 
-    public static void print(String s) {
+    public final void print(String s) {
         screen += s;
         System.out.print(s);
     }
 
-    public static void print(int i) {
+    public final void print(int i) {
         screen += i;
         System.out.print(i);
     }
 
-    public static void print(double d) {
+    public final void print(double d) {
         screen += d;
         System.out.print(d);
     }
 
-    public static void newline() {
+    public final void newline() {
         screen += "\r\n";
         System.out.println();
     }
 
-    public static void println(String s) {
+    public final void println(String s) {
         print(s);
         newline();
     }
 
-    public static void println(int i) {
+    public final void println(int i) {
         print(i);
         newline();
     }
 
-    public static void println(double d) {
+    public final void println(double d) {
         print(d);
         newline();
     }
 
-    public static void acceptInput() {
+    public final void acceptInput() {
         screen += pendingInput;
         screen += "\r\n";
+
+        clearScreen();
+        System.out.print(screen);
     }
 
-    public static void rejectInput(String error) {
+    private void checkAutoAccept() {
+        if (autoAccept) {
+            autoAccept = false;
+            acceptInput();
+        }
+    }
+
+    private int checkAutoAccept(String prompt, int i) {
+        pendingInput = prompt + i;
+
+        checkAutoAccept();
+
+        return i;
+    }
+
+    private double checkAutoAccept(String prompt, double d) {
+        pendingInput = prompt + d;
+
+        checkAutoAccept();
+
+        return d;
+    }
+
+    private String checkAutoAccept(String prompt, String s) {
+        pendingInput = prompt + s;
+
+        checkAutoAccept();
+
+        return s;
+    }
+
+    private char checkAutoAccept(String prompt, char c) {
+        pendingInput = prompt + c;
+
+        checkAutoAccept();
+
+        return c;
+    }
+
+    public final void rejectInput(String error) {
         clearScreen();
         System.out.print(screen);
         System.out.println(error);
     }
 
-    public static void invalidInput() {
+    public final void emptyInput() {
+        rejectInput("Cannot enter empty input!");
+    }
+
+    public final void invalidInput() {
         rejectInput("Invalid input!");
     }
 
-    public static int readInt(String prompt) {
-        while (true) {
-            System.out.print(prompt);
+    public final UI noReject() {
+        autoAccept = true;
 
-            try {
-                int i = scanner.nextInt();
-
-                pendingInput = prompt + i;
-
-                return i;
-            }
-            catch (Exception ignored) {}
-
-            invalidInput();
-        }
+        return this;
     }
 
-    public static int readValidInt(String prompt) {
-        int i = readInt(prompt);
-
-        acceptInput();
-
-        return i;
-    }
-
-    public static double readDouble(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-
-            try {
-                double d = scanner.nextDouble();
-
-                pendingInput = prompt + d;
-
-                return d;
-            }
-            catch (Exception ignored) {}
-
-            invalidInput();
-        }
-    }
-
-    public static double readValidDouble(String prompt) {
-        double d = readDouble(prompt);
-
-        acceptInput();
-
-        return d;
-    }
-
-    public static String readString(String prompt) {
+    private String readLine(String prompt) {
         System.out.print(prompt);
 
-        String s = scanner.nextLine();
-
-        pendingInput = prompt + s;
-
-        return s;
+        return scanner.nextLine();
     }
 
-    public static String readValidString(String prompt) {
-        String s = readString(prompt);
-
-        acceptInput();
-
-        return s;
-    }
-
-    public static char readCharOptions(String prompt, String options) {
+    public final int readInt(String prompt) {
         while (true) {
-            String s = readString(prompt);
+            var s = readLine(prompt);
 
-            if (!s.isEmpty()) {
-                char c = s.charAt(0);
-
-                if (options.contains(String.valueOf(c))) {
-                    acceptInput();
-
-                    return c;
-                }
-
-                rejectInput("Unknown option '" + c + "'!");
+            if (s.isBlank()) {
+                emptyInput();
             }
             else {
-                rejectInput("Please select an option");
+                try {
+                    return checkAutoAccept(prompt, Integer.parseInt(s));
+                }
+                catch (Exception e) {
+                    invalidInput();
+                }
             }
         }
     }
 
-    public abstract void run();
+    public final int readIntOrDefault(String prompt, int defaultInt) {
+        while (true) {
+            var s = readLine(prompt);
+
+            try {
+                return checkAutoAccept(prompt, s.isBlank() ? defaultInt : Integer.parseInt(s));
+            }
+            catch (Exception e) {
+                invalidInput();
+            }
+        }
+    }
+
+    public final double readDouble(String prompt) {
+        while (true) {
+            var s = readLine(prompt);
+
+            if (s.isBlank()) {
+                emptyInput();
+            }
+            else {
+                try {
+                    return checkAutoAccept(prompt, Double.parseDouble(s));
+                }
+                catch (Exception e) {
+                    invalidInput();
+                }
+            }
+        }
+    }
+
+    public final double readDoubleOrDefault(String prompt, Double defaultDouble) {
+        while (true) {
+            var s = readLine(prompt);
+
+            try {
+                return checkAutoAccept(prompt, s.isBlank() ? defaultDouble : Double.parseDouble(s));
+            }
+            catch (Exception e) {
+                invalidInput();
+            }
+        }
+    }
+
+    public final String readString(String prompt) {
+        while (true) {
+            var s = readLine(prompt);
+
+            if (s.isBlank()) {
+                emptyInput();
+            }
+            else {
+                return checkAutoAccept(prompt, s);
+            }
+        }
+    }
+
+    public final String readStringOrDefault(String prompt, String defaultString) {
+        var s = readLine(prompt);
+
+        return checkAutoAccept(prompt, s.isBlank() ? defaultString : s);
+    }
+
+    public final char readChar(String prompt) {
+        while (true) {
+            var s = readLine(prompt);
+
+            if (s.isBlank()) {
+                emptyInput();
+            }
+            else {
+                return checkAutoAccept(prompt, s.strip().charAt(0));
+            }
+        }
+    }
+
+    public final char readCharOrDefault(String prompt, char defaultChar) {
+        var s = readLine(prompt);
+
+        return checkAutoAccept(prompt, s.isBlank() ? defaultChar : s.strip().charAt(0));
+    }
+
+    private static boolean checkOptions(CharSequence options, char opt) {
+        return options.chars().anyMatch(c -> c == opt);
+    }
+
+    public final char readCharOptions(String prompt, CharSequence options) {
+        var accept = autoAccept;
+
+        autoAccept = false;
+
+        while (true) {
+            var c = readChar(prompt);
+
+            if (checkOptions(options, c)) {
+                if (accept) {
+                    acceptInput();
+                }
+
+                return c;
+            }
+
+            rejectInput("Unknown option '" + c + "'!");
+        }
+    }
+
+    public final char readCharOptionsOrDefault(String prompt, CharSequence options, char defaultOption) {
+        var accept = autoAccept;
+
+        autoAccept = false;
+
+        while (true) {
+            var c = readCharOrDefault(prompt, defaultOption);
+
+            if (checkOptions(options, c)) {
+                if (accept) {
+                    acceptInput();
+                }
+
+                return c;
+            }
+
+            invalidInput();
+        }
+    }
+
+    public final void readEnter() {
+        noReject().readStringOrDefault("Press Enter to continue", "");
+    }
+
+    public abstract UI run();
 }
