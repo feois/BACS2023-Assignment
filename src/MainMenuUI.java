@@ -18,16 +18,24 @@ public class MainMenuUI extends UI {
 
         var opt = noReject().readCharOptions("Enter options: ", "123456");
 
-        return switch (opt) {
-            case '1', '2', '3', '4' -> throw new RuntimeException(); // TODO
-            case '5' -> new LoginUI();
-            case '6' -> null;
+        switch (opt) {
+            case '1' -> new ListCategoriesUI().run();
+            case '2' -> new AddCategoryUI().run();
+            case '3' -> new SearchProductUI(admin).run();
+            case '4' -> new AddProductUI().run();
+            case '5' -> {
+                return new LoginUI(); // log out
+            }
+            case '6' -> {
+                return null; // exit
+            }
             default -> throw new RuntimeException(); // should never happen
-        };
+        }
+
+        return this;
     }
 
     private UI customerUI(Customer customer) {
-
         println("Options");
 
         println("1) View cart");
@@ -39,12 +47,20 @@ public class MainMenuUI extends UI {
 
         var opt = noReject().readCharOptions("Enter options: ", "12345");
 
-        return switch (opt) {
-            case '1', '2', '3' -> throw new RuntimeException(); // TODO
-            case '4' -> new LoginUI();
-            case '5' -> null;
+        switch (opt) {
+            case '1' -> new ViewCartUI(customer).run();
+            case '2' -> new SearchProductUI(customer).run();
+            case '3' -> new CheckoutUI(customer).run();
+            case '4' -> {
+                return new LoginUI(); // log out
+            }
+            case '5' -> {
+                return null; // exit
+            }
             default -> throw new RuntimeException(); // should never happen
-        };
+        }
+
+        return this;
     }
 
     @Override

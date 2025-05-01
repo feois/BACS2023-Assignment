@@ -19,7 +19,20 @@ public class Main {
     }
 
     public static void saveFiles() {
+        try {
+            CategoryManager.saveToFile(new File(""));
+        }
+        catch (IOException ignored) {}
 
+        try {
+            ProductManager.saveToFile(new File(""));
+        }
+        catch (IOException ignored) {}
+
+        try {
+            UserManager.saveToFile(new File(""));
+        }
+        catch (IOException ignored) {}
     }
 
     public static void main(String[] args) {
