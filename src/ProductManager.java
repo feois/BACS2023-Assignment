@@ -3,31 +3,26 @@ import java.util.*;
 
 public class ProductManager {
     private static final List<Product> products = new ArrayList<>();
+    private static final Map<String, Product> productIDs = new HashMap<>();
     private static final Map<Category, List<Product>> categories = new HashMap<>();
 
-    public static void readFromFile(File file) throws IOException {
-        var reader = new BufferedReader(new FileReader(file));
-        var s = reader.readLine();
-
-        while (s != null) {
-            var id = s;
-            var name = reader.readLine();
-            var desc = reader.readLine();
-            var price = Double.parseDouble(reader.readLine());
-            var category = CategoryManager.getCategory(reader.readLine().charAt(0));
-
-            addProduct(new Product(id, name, desc, price, category));
-
-            s = reader.readLine();
+    public static void addProduct(Product product) {
+        if (productIDs.containsKey(product.getProductID())) {
+            throw new IllegalArgumentException("Product ID already exist!");
         }
 
-        reader.close();
-    }
-
-    public static void addProduct(Product product) {
         products.add(product);
+        productIDs.put(product.getProductID(), product);
         categories.putIfAbsent(product.category, new ArrayList<>());
         categories.get(product.category).add(product);
+    }
+
+    public static Product getProduct(String productID) {
+        return productIDs.get(productID);
+    }
+
+    public static List<Product> getProducts() {
+        return Collections.unmodifiableList(products);
     }
 
     public static List<Product> getProducts(Category category) {
@@ -42,10 +37,26 @@ public class ProductManager {
         return searchProduct(name).stream().filter(p -> p.category == category).toList();
     }
 
-    public static void saveToFile(File file) throws IOException {
-        var writer = new BufferedWriter(new FileWriter(file));
+    public static void readFrom(Reader in) throws IOException {
+        var reader = new PeekableReader(in);
 
-        for (var prod : products) {
+        while (reader.hasLine()) {
+            var id = reader.readLine();
+            var name = reader.readLine();
+            var desc = reader.readLine();
+            var price = Double.parseDouble(reader.readLine());
+            var category = CategoryManager.getCategory(reader.readLine().charAt(0));
+
+            addProduct(new Product(id, name, desc, price, category));
+        }
+
+        reader.close();
+    }
+
+    public static void saveTo(Writer out) throws IOException {
+        var writer = new BufferedWriter(out);
+
+        for (var prod : getProducts()) {
             writer.write(prod.getProductID());
             writer.newLine();
             writer.write(prod.productName);
@@ -55,6 +66,7 @@ public class ProductManager {
             writer.write(Double.toString(prod.price));
             writer.newLine();
             writer.write(String.valueOf(prod.category.getCategoryCode()));
+            writer.newLine();
         }
 
         writer.close();

@@ -1,23 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
-*/
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Customer extends User {
-    public Cart cart;
-    private List<Order>  history;
+    public final Cart cart;
+    private final List<Order> history;
 
     public Customer(String username, String password) {
+        this(username, password, new Cart(), new ArrayList<>());
+    }
+
+    public Customer(String username, String password, Cart cart, List<Order> history) {
         super(username, password);
-        cart = new Cart();
-        history = new ArrayList<>();
+
+        this.cart = cart;
+        this.history = history;
     }
     
     public Order checkout(){
-        return null;
+        if (cart.getProducts().isEmpty()) {
+            return null;
+        }
+
+        var order = new Order(cart, Instant.now());
+
+        history.add(order);
+        cart.getProducts().forEach((product, quantity) -> Inventory.updateQuantity(product, Inventory.getQuantity(product) - quantity));
+        cart.clear();
+
+        return order;
     }
     
     public List<Order> getOrderHistory(){

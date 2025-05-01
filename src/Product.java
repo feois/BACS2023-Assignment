@@ -6,11 +6,28 @@ public class Product {
     public Category category;
 
     public Product(String productID, String productName, String description, double price, Category category) {
+        if (!validateID(productID)) {
+            throw new IllegalArgumentException("Invalid Product ID");
+        }
+
         this.productID = productID;
         this.productName = productName;
         this.description = description;
         this.price = price;
         this.category = category;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static boolean validateID(String productID) {
+        if (productID.length() > 1 && productID.charAt(0) == 'P') {
+            try {
+                Integer.parseUnsignedInt(productID.substring(1));
+                return true;
+            }
+            catch (Exception ignored) {}
+        }
+
+        return false;
     }
 
     public String getProductID() {

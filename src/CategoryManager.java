@@ -4,18 +4,6 @@ import java.util.*;
 public class CategoryManager {
     private static final List<Category> categories = new ArrayList<>();
 
-    public static void readFromFile(File file) throws IOException {
-        var reader = new BufferedReader(new FileReader(file));
-        var s = reader.readLine();
-
-        while (s != null) {
-            addCategory(new Category(s.substring(1), s.charAt(0)));
-            s = reader.readLine();
-        }
-
-        reader.close();
-    }
-
     public static List<Category> getCategories() {
         return Collections.unmodifiableList(categories);
     }
@@ -34,11 +22,24 @@ public class CategoryManager {
         categories.add(category);
     }
 
-    public static void saveToFile(File file) throws IOException {
-        var writer = new BufferedWriter(new FileWriter(file));
+    public static void readFrom(Reader in) throws IOException {
+        var reader = new PeekableReader(in);
+
+        while (reader.hasLine()) {
+            var s = reader.readLine();
+
+            addCategory(new Category(s.charAt(0), s.substring(1)));
+        }
+
+        reader.close();
+    }
+
+    public static void saveTo(Writer out) throws IOException {
+        var writer = new BufferedWriter(out);
 
         for (var cat : categories) {
             writer.write(cat.getCategoryCode() + cat.getCategoryName());
+            writer.newLine();
         }
 
         writer.close();

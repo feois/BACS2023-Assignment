@@ -1,17 +1,17 @@
 public class Category {
-    private String categoryName;
-    private char categoryCode;
+    private final char categoryCode;
+    private final String categoryName;
 
-    public Category(String categoryName, char categoryCode) {
-        this.categoryName = categoryName;
+    public Category(char categoryCode, String categoryName) {
         this.categoryCode = categoryCode;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
+        this.categoryName = categoryName;
     }
 
     public char getCategoryCode() {
         return categoryCode;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
     }
 }

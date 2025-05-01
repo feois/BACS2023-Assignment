@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+@SuppressWarnings("unused")
 public abstract class UI {
     private static final Scanner scanner = new Scanner(System.in);
     private static String screen = "";
@@ -27,6 +28,11 @@ public abstract class UI {
         clearScreen();
     }
 
+    public final void print(char c) {
+        screen += c;
+        System.out.print(c);
+    }
+
     public final void print(String s) {
         screen += s;
         System.out.print(s);
@@ -42,24 +48,29 @@ public abstract class UI {
         System.out.print(d);
     }
 
-    public final void newline() {
+    public final void newLine() {
         screen += "\r\n";
         System.out.println();
     }
 
+    public final void println(char c) {
+        print(c);
+        newLine();
+    }
+
     public final void println(String s) {
         print(s);
-        newline();
+        newLine();
     }
 
     public final void println(int i) {
         print(i);
-        newline();
+        newLine();
     }
 
     public final void println(double d) {
         print(d);
-        newline();
+        newLine();
     }
 
     public final void acceptInput() {
@@ -218,21 +229,31 @@ public abstract class UI {
 
     public final char readChar(String prompt) {
         while (true) {
-            var s = readLine(prompt);
+            var s = readLine(prompt).strip();
 
             if (s.isBlank()) {
                 emptyInput();
             }
+            else if (s.length() > 1) {
+                rejectInput("You can input only a single character!");
+            }
             else {
-                return checkAutoAccept(prompt, s.strip().charAt(0));
+                return checkAutoAccept(prompt, s.charAt(0));
             }
         }
     }
 
     public final char readCharOrDefault(String prompt, char defaultChar) {
-        var s = readLine(prompt);
+        while (true) {
+            var s = readLine(prompt).strip();
 
-        return checkAutoAccept(prompt, s.isBlank() ? defaultChar : s.strip().charAt(0));
+            if (s.length() > 1) {
+                rejectInput("You can input only a single character");
+            }
+            else {
+                return checkAutoAccept(prompt, s.isEmpty() ? defaultChar : s.charAt(0));
+            }
+        }
     }
 
     private static boolean checkOptions(CharSequence options, char opt) {
