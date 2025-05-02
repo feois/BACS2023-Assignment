@@ -53,32 +53,16 @@ public class UserManager {
         while (reader.hasLine()) {
             var username = reader.readLine();
             var password = reader.readLine();
-            var cart = new Cart();
+            Cart cart;
             var history = new ArrayList<Order>();
 
             reader.readLine(); // skip "Cart" line
 
-            while (reader.hasLine() && reader.peekLine().startsWith("\t")) {
-                var product = ProductManager.getProduct(reader.readLine().substring(1));
-                var quantity = Integer.parseUnsignedInt(reader.readLine().substring(1));
-
-                Inventory.updateQuantity(product, quantity);
-                cart.addProduct(product, quantity);
-                Inventory.updateQuantity(product, 0);
-            }
+            cart = Cart.readFrom(reader);
 
             while (reader.hasLine() && reader.peekLine().startsWith("Order")) {
                 var date = Instant.parse(reader.readLine().substring(6));
-                var orderCart = new Cart();
-
-                while (reader.hasLine() && reader.peekLine().startsWith("\t")) {
-                    var product = ProductManager.getProduct(reader.readLine().substring(1));
-                    var quantity = Integer.parseUnsignedInt(reader.readLine().substring(1));
-
-                    Inventory.updateQuantity(product, quantity);
-                    orderCart.addProduct(product, quantity);
-                    Inventory.updateQuantity(product, 0);
-                }
+                var orderCart = Cart.readFrom(reader);
 
                 history.add(new Order(orderCart, date));
             }

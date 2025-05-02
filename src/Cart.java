@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.*;
 
 public class Cart {
@@ -67,5 +68,18 @@ public class Cart {
         }
 
         return amount;
+    }
+
+    public static Cart readFrom(PeekableReader reader) throws IOException {
+        var cart = new Cart();
+
+        while (reader.hasLine() && reader.peekLine().startsWith("\t")) {
+            var product = ProductManager.getProduct(reader.readLine().substring(1));
+            var quantity = Integer.parseUnsignedInt(reader.readLine().substring(1));
+
+            cart.products.put(product, quantity);
+        }
+
+        return cart;
     }
 }
