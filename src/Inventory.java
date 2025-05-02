@@ -35,7 +35,7 @@ public class Inventory {
         try {
             products.forEach((product, stock) -> {
                 try {
-                    writer.write(product.getProductID());
+                    writer.write(product.productID);
                     writer.newLine();
                     writer.write(Integer.toString(stock));
                     writer.newLine();

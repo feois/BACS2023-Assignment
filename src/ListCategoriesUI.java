@@ -11,11 +11,14 @@ public class ListCategoriesUI extends UI {
         for (int i = 0; i < categories.size(); i++) {
             var category = categories.get(i);
 
-            print(i);
+            print(i + 1);
             println(") " + category.getCategoryCode() + ": " + category.getCategoryName());
             print('\t');
             println("Product count: " + ProductManager.getProducts(category).size());
         }
+
+        newLine();
+        readEnter();
 
         return null;
     }

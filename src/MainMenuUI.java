@@ -25,6 +25,7 @@ public class MainMenuUI extends UI {
             case '4' -> new AddProductUI().run();
             case '5' -> { return new LoginUI(); } // log out
             case '6' -> { return null; } // exit
+            default -> {}
         }
 
         return this;
@@ -33,9 +34,10 @@ public class MainMenuUI extends UI {
     private UI customerUI(Customer customer) {
         println("Options");
 
-        println("1) View cart");
-        println("2) Search product");
+        println("1) Search product");
+        println("2) View cart");
         println("3) Check out");
+        println("4) View order history");
         println("4) Log out");
         println("5) Exit");
         newLine();
@@ -43,11 +45,13 @@ public class MainMenuUI extends UI {
         var opt = noReject().readCharOptions("Enter options: ", "12345");
 
         switch (opt) {
-            case '1' -> new ViewCartUI(customer).run();
-            case '2' -> new SearchProductUI(customer).run();
+            case '1' -> new SearchProductUI(customer).run();
+            case '2' -> new ViewCartUI(customer).run();
             case '3' -> new CheckoutUI(customer).run();
-            case '4' -> { return new LoginUI(); } // log out
-            case '5' -> { return null; } // exit
+            case '4' -> new ViewHistoryUI(customer).run();
+            case '5' -> { return new LoginUI(); } // log out
+            case '6' -> { return null; } // exit
+            default -> {}
         }
 
         return this;

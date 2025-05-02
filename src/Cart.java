@@ -53,4 +53,17 @@ public class Cart {
     public void removeProduct(Product product) {
         products.remove(product);
     }
+
+    public double calculateAmount() {
+        var amount = 0.0;
+
+        for (var entry : getProducts().entrySet()) {
+            var product = entry.getKey();
+            var quantity = entry.getValue();
+
+            amount += product.price * quantity;
+        }
+
+        return amount;
+    }
 }

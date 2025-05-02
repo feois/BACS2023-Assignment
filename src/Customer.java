@@ -18,9 +18,18 @@ public class Customer extends User {
         this.history = history;
     }
     
-    public Order checkout(){
+    public Order checkout() {
         if (cart.getProducts().isEmpty()) {
             return null;
+        }
+
+        for (var entry : cart.getProducts().entrySet()) {
+            var product = entry.getKey();
+            var quantity = entry.getValue();
+
+            if (quantity > Inventory.getQuantity(product)) {
+                return null;
+            }
         }
 
         var order = new Order(cart, Instant.now());

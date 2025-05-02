@@ -3,9 +3,24 @@ import java.util.*;
 
 public class CategoryManager {
     private static final List<Category> categories = new ArrayList<>();
+    private static String categoriesString = null;
 
     public static List<Category> getCategories() {
         return Collections.unmodifiableList(categories);
+    }
+
+    public static String getCategoriesString() {
+        if (categoriesString == null) {
+            var builder = new StringBuilder();
+
+            for (var cat : categories) {
+                builder.append(cat.getCategoryCode());
+            }
+
+            categoriesString = builder.toString();
+        }
+
+        return categoriesString;
     }
 
     public static Category getCategory(char code) {
@@ -19,7 +34,12 @@ public class CategoryManager {
     }
 
     public static void addCategory(Category category) {
+        if (getCategory(category.getCategoryCode()) != null) {
+            throw new IllegalArgumentException("Category code already exists!");
+        }
+
         categories.add(category);
+        categoriesString = null;
     }
 
     public static void readFrom(Reader in) throws IOException {

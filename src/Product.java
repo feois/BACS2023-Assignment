@@ -1,11 +1,11 @@
 public class Product {
-    private final String productID;
+    public final String productID;
     public String productName;
     public String description;
     public double price;
-    public Category category;
+    public final Category category;
 
-    public Product(String productID, String productName, String description, double price, Category category) {
+    public Product(String productID, String productName, String description, double price) {
         if (!validateID(productID)) {
             throw new IllegalArgumentException("Invalid Product ID");
         }
@@ -14,12 +14,16 @@ public class Product {
         this.productName = productName;
         this.description = description;
         this.price = price;
-        this.category = category;
+        category = getCategoryFromID(productID);
+    }
+
+    private static Category getCategoryFromID(String productID) {
+        return productID.isEmpty() ? null : CategoryManager.getCategory(productID.charAt(0));
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean validateID(String productID) {
-        if (productID.length() > 1 && productID.charAt(0) == 'P') {
+        if (productID.length() > 4 && getCategoryFromID(productID) != null) {
             try {
                 Integer.parseUnsignedInt(productID.substring(1));
                 return true;
@@ -28,9 +32,5 @@ public class Product {
         }
 
         return false;
-    }
-
-    public String getProductID() {
-        return productID;
     }
 }

@@ -1,35 +1,23 @@
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class Order {
     private final Cart cart;
-    private final Instant time;
-    private final double amount;
+    public final Instant time;
+    public final double amount;
 
     public Order(Cart cart, Instant time) {
         this.cart = new Cart(cart); // copy cart
         this.time = time;
-
-        var amount = 0.0;
-
-        for (var entry : cart.getProducts().entrySet()) {
-            var product = entry.getKey();
-            var quantity = entry.getValue();
-
-            amount += product.price * quantity;
-        }
-
-        this.amount = amount;
+        this.amount = cart.calculateAmount();
     }
 
     public Cart getCart() {
         return new Cart(cart); // copy cart
     }
 
-    public Instant getTime() {
-        return time;
-    }
-
-    public double getAmount() {
-        return amount;
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.ofInstant(time, ZoneId.systemDefault());
     }
 }

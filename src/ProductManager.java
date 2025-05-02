@@ -7,12 +7,12 @@ public class ProductManager {
     private static final Map<Category, List<Product>> categories = new HashMap<>();
 
     public static void addProduct(Product product) {
-        if (productIDs.containsKey(product.getProductID())) {
+        if (productIDs.containsKey(product.productID)) {
             throw new IllegalArgumentException("Product ID already exist!");
         }
 
         products.add(product);
-        productIDs.put(product.getProductID(), product);
+        productIDs.put(product.productID, product);
         categories.putIfAbsent(product.category, new ArrayList<>());
         categories.get(product.category).add(product);
     }
@@ -26,7 +26,9 @@ public class ProductManager {
     }
 
     public static List<Product> getProducts(Category category) {
-        return Collections.unmodifiableList(categories.get(category));
+        var products = categories.get(category);
+
+        return Collections.unmodifiableList(products == null ? new ArrayList<>() : products);
     }
 
     public static List<Product> searchProduct(String name) {
@@ -45,9 +47,8 @@ public class ProductManager {
             var name = reader.readLine();
             var desc = reader.readLine();
             var price = Double.parseDouble(reader.readLine());
-            var category = CategoryManager.getCategory(reader.readLine().charAt(0));
 
-            addProduct(new Product(id, name, desc, price, category));
+            addProduct(new Product(id, name, desc, price));
         }
 
         reader.close();
@@ -57,15 +58,13 @@ public class ProductManager {
         var writer = new BufferedWriter(out);
 
         for (var prod : getProducts()) {
-            writer.write(prod.getProductID());
+            writer.write(prod.productID);
             writer.newLine();
             writer.write(prod.productName);
             writer.newLine();
             writer.write(prod.description);
             writer.newLine();
             writer.write(Double.toString(prod.price));
-            writer.newLine();
-            writer.write(String.valueOf(prod.category.getCategoryCode()));
             writer.newLine();
         }
 

@@ -105,7 +105,7 @@ public class UserManager {
             cart.getProducts().forEach((product, count) -> {
                 try {
                     writer.write('\t');
-                    writer.write(product.getProductID());
+                    writer.write(product.productID);
                     writer.newLine();
                     writer.write('\t');
                     writer.write(Integer.toString(count));
@@ -136,7 +136,7 @@ public class UserManager {
                 writeCart(writer, customer.cart);
 
                 for (var order : customer.getOrderHistory()) {
-                    writer.write("Order " + order.getTime());
+                    writer.write("Order " + order.time);
                     writer.newLine();
 
                     writeCart(writer, order.getCart());

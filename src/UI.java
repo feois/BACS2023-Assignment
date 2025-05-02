@@ -301,7 +301,31 @@ public abstract class UI {
     }
 
     public final void readEnter() {
-        noReject().readStringOrDefault("Press Enter to continue", "");
+        readEnter("Press Enter to continue");
+    }
+
+    public final void readEnter(String prompt) {
+        noReject().readStringOrDefault(prompt, "");
+    }
+
+    public final void printCategories() {
+        println("Categories");
+        newLine();
+
+        for (var cat : CategoryManager.getCategories()) {
+            print(cat.getCategoryCode());
+            println(": " + cat.getCategoryName());
+        }
+
+        newLine();
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    public final void printProduct(Product product) {
+        println(product.productID + '\t' + product.productName);
+        println("\tDescription: " + product.description);
+        println("\tCategory:    " + product.category.getCategoryName());
+        println("\tPrice:       " + product.price);
     }
 
     public abstract UI run();
