@@ -1,6 +1,7 @@
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class Order {
     private final Cart cart;
@@ -17,7 +18,7 @@ public class Order {
         return new Cart(cart); // copy cart
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return LocalDateTime.ofInstant(time, ZoneId.systemDefault());
+    public String getLocalDateTime() {
+        return LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss"));
     }
 }

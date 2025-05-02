@@ -14,6 +14,13 @@ public class ViewHistoryUI extends UI {
 
         var history = customer.getOrderHistory();
 
+        if (history.isEmpty()) {
+            println("No order history");
+            newLine();
+            readEnter();
+            return null;
+        }
+
         for (int i = 0; i < history.size(); i++) {
             var order = history.get(i);
 
@@ -28,7 +35,7 @@ public class ViewHistoryUI extends UI {
         while (true) {
             index = readInt("View order #");
 
-            if (index < 0 || index >= history.size()) {
+            if (index <= 0 || index > history.size()) {
                 rejectInput("Invalid index!");
             }
             else {
@@ -39,16 +46,16 @@ public class ViewHistoryUI extends UI {
 
         clear();
 
-        var order = history.get(index);
+        var order = history.get(--index);
 
         println("Order History: Order placed on " + order.getLocalDateTime());
         newLine();
-        println("Total amount: RM " + order.amount);
+        println("Total amount: " + formatCurrency(order.amount));
         newLine();
 
         order.getCart().getProducts().forEach(((product, quantity) -> {
             printProduct(product);
-            print("\tQuantity:    " + quantity);
+            println("\tQuantity:    " + quantity);
         }));
 
         newLine();

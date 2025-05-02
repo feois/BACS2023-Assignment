@@ -19,6 +19,7 @@ public class Cart {
         return Collections.unmodifiableMap(products);
     }
 
+    @SuppressWarnings("unused")
     public void addProduct(Product product) {
         addProduct(product, 1);
     }
@@ -33,6 +34,7 @@ public class Cart {
         products.put(product, quantity);
     }
 
+    @SuppressWarnings("unused")
     public void reduceProduct(Product product) {
         reduceProduct(product, 1);
     }
@@ -41,7 +43,7 @@ public class Cart {
         if (products.containsKey(product)){
             int currentQuantity = products.get(product);
 
-            if (currentQuantity >= quantity){
+            if (currentQuantity > quantity){
                 products.put(product,currentQuantity-quantity);
             }
             else{

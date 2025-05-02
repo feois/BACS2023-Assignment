@@ -62,7 +62,9 @@ public class UserManager {
                 var product = ProductManager.getProduct(reader.readLine().substring(1));
                 var quantity = Integer.parseUnsignedInt(reader.readLine().substring(1));
 
+                Inventory.updateQuantity(product, quantity);
                 cart.addProduct(product, quantity);
+                Inventory.updateQuantity(product, 0);
             }
 
             while (reader.hasLine() && reader.peekLine().startsWith("Order")) {
@@ -73,7 +75,9 @@ public class UserManager {
                     var product = ProductManager.getProduct(reader.readLine().substring(1));
                     var quantity = Integer.parseUnsignedInt(reader.readLine().substring(1));
 
+                    Inventory.updateQuantity(product, quantity);
                     orderCart.addProduct(product, quantity);
+                    Inventory.updateQuantity(product, 0);
                 }
 
                 history.add(new Order(orderCart, date));

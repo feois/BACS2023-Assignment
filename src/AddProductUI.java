@@ -9,9 +9,12 @@ public class AddProductUI extends UI {
         String productID;
 
         while (true) {
-            productID = readString("Enter new product's ID: ");
+            productID = readStringOrDefault("Enter new product's ID (Empty to cancel): ", "");
 
-            if (Product.validateID(productID)) {
+            if (productID.isEmpty()) {
+                return null;
+            }
+            else if (Product.validateID(productID)) {
                 if (ProductManager.getProduct(productID) == null) {
                     acceptInput();
                     break;
@@ -30,7 +33,7 @@ public class AddProductUI extends UI {
         double price;
 
         while (true) {
-            price = readDouble("Enter product price: ");
+            price = readDouble("Enter product price: RM ");
 
             if (price > 0) {
                 acceptInput();
@@ -44,6 +47,10 @@ public class AddProductUI extends UI {
         var product = new Product(productID, name, desc, price);
 
         ProductManager.addProduct(product);
+
+        newLine();
+        println("Product successfully added!");
+        readEnter();
 
         return null;
     }

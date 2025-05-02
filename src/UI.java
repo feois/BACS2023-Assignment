@@ -296,7 +296,7 @@ public abstract class UI {
                 return c;
             }
 
-            invalidInput();
+            rejectInput("Unknown option '" + c + "'!");
         }
     }
 
@@ -325,7 +325,11 @@ public abstract class UI {
         println(product.productID + '\t' + product.productName);
         println("\tDescription: " + product.description);
         println("\tCategory:    " + product.category.getCategoryName());
-        println("\tPrice:       " + product.price);
+        println("\tPrice:       " + formatCurrency(product.price));
+    }
+
+    public static String formatCurrency(Double currency) {
+        return "RM " + String.format("%.2f", currency);
     }
 
     public abstract UI run();

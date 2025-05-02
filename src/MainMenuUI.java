@@ -5,6 +5,7 @@ public class MainMenuUI extends UI {
         this.loginUser = loginUser;
     }
 
+    @SuppressWarnings("unused")
     private UI adminUI(Administrator admin) {
         println("Options");
 
@@ -12,23 +13,25 @@ public class MainMenuUI extends UI {
         println("2) Add categories");
         println("3) Search product");
         println("4) Add product");
-        println("5) Log out");
-        println("6) Exit");
+        println("5) Update inventory");
+        println("6) Log out");
+        println("7) Exit");
         newLine();
 
-        var opt = noReject().readCharOptions("Enter options: ", "123456");
+        var opt = noReject().readCharOptions("Enter options: ", "1234567");
 
         switch (opt) {
             case '1' -> new ListCategoriesUI().run();
             case '2' -> new AddCategoryUI().run();
-            case '3' -> new SearchProductUI(admin).run();
+            case '3' -> new SearchProductUI().run();
             case '4' -> new AddProductUI().run();
-            case '5' -> { return new LoginUI(); } // log out
-            case '6' -> { return null; } // exit
+            case '5' -> new UpdateInventoryUI().run();
+            case '6' -> { return new LoginUI(); } // log out
+            case '7' -> { return null; } // exit
             default -> {}
         }
 
-        return this;
+        return this; // run main menu again
     }
 
     private UI customerUI(Customer customer) {
@@ -38,14 +41,14 @@ public class MainMenuUI extends UI {
         println("2) View cart");
         println("3) Check out");
         println("4) View order history");
-        println("4) Log out");
-        println("5) Exit");
+        println("5) Log out");
+        println("6) Exit");
         newLine();
 
-        var opt = noReject().readCharOptions("Enter options: ", "12345");
+        var opt = noReject().readCharOptions("Enter options: ", "123456");
 
         switch (opt) {
-            case '1' -> new SearchProductUI(customer).run();
+            case '1' -> new SearchProductUI().run();
             case '2' -> new ViewCartUI(customer).run();
             case '3' -> new CheckoutUI(customer).run();
             case '4' -> new ViewHistoryUI(customer).run();
@@ -54,7 +57,7 @@ public class MainMenuUI extends UI {
             default -> {}
         }
 
-        return this;
+        return this; // run main menu again
     }
 
     @Override

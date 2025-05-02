@@ -8,13 +8,18 @@ public class ListCategoriesUI extends UI {
 
         var categories = CategoryManager.getCategories();
 
-        for (int i = 0; i < categories.size(); i++) {
-            var category = categories.get(i);
+        if (categories.isEmpty()) {
+            println("No category");
+        }
+        else {
+            for (int i = 0; i < categories.size(); i++) {
+                var category = categories.get(i);
 
-            print(i + 1);
-            println(") " + category.getCategoryCode() + ": " + category.getCategoryName());
-            print('\t');
-            println("Product count: " + ProductManager.getProducts(category).size());
+                print(i + 1);
+                println(") " + category.getCategoryCode() + ": " + category.getCategoryName());
+                print('\t');
+                println("Product count: " + ProductManager.getProducts(category).size());
+            }
         }
 
         newLine();

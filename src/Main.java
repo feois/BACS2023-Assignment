@@ -17,13 +17,13 @@ public class Main {
         try { ProductManager.readFrom(new FileReader(path.resolve(PRODUCT_FILE).toFile())); }
         catch (IOException ignored) {}
 
-        try { Inventory.readFrom(new FileReader(path.resolve(INVENTORY_FILE).toFile())); }
-        catch (IOException ignored) {}
-
         try { UserManager.readAdministratorsFrom(new FileReader(path.resolve(ADMINISTRATORS_FILE).toFile())); }
         catch (IOException ignored) {}
 
         try { UserManager.readCustomersFrom(new FileReader(path.resolve(CUSTOMERS_FILE).toFile())); }
+        catch (IOException ignored) {}
+
+        try { Inventory.readFrom(new FileReader(path.resolve(INVENTORY_FILE).toFile())); }
         catch (IOException ignored) {}
     }
 

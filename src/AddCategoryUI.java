@@ -9,9 +9,12 @@ public class AddCategoryUI extends UI {
         char code;
 
         while (true) {
-            code = readChar("Enter category's character code: ");
+            code = readCharOrDefault("Enter category's character code (Empty to cancel): ", ' ');
 
-            if (Category.validateCode(code)) {
+            if (code == ' ') {
+                return null;
+            }
+            else if (Category.validateCode(code)) {
                 if (CategoryManager.getCategory(code) == null) {
                     acceptInput();
                     break;
