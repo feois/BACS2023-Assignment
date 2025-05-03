@@ -1,3 +1,5 @@
+import java.util.HashSet;
+
 public class ViewCartUI extends UI {
     private final Customer customer;
 
@@ -6,8 +8,6 @@ public class ViewCartUI extends UI {
     }
 
     public void addProduct() {
-        newLine();
-
         var products = customer.cart.getProducts();
 
         Product product;
@@ -65,8 +65,6 @@ public class ViewCartUI extends UI {
     }
 
     public void reduceProduct() {
-        newLine();
-
         var products = customer.cart.getProducts();
         Product product;
 
@@ -117,6 +115,41 @@ public class ViewCartUI extends UI {
         customer.cart.reduceProduct(product, quantity);
     }
 
+    private void checkout() {
+        println("Checkout");
+        newLine();
+
+        println("Amount: " + formatCurrency(customer.cart.calculateAmount()));
+        newLine();
+
+        char c = noReject().readCharOptions("Confirm? yY/nN ", "yYnN");
+
+        if (c == 'y' || c == 'Y') {
+            newLine();
+
+            if (customer.checkout() == null) {
+                println("Order failed to proceed due to invalid stock quantity!");
+                println("The cart has been adjusted to fit the current stock quantity, please review the cart again!");
+
+                var products = new HashSet<>(customer.cart.getProducts().keySet());
+                var cart = customer.cart;
+
+                for (var product : products) {
+                    var quantity = cart.getProducts().get(product);
+
+                    if (quantity > Inventory.getQuantity(product)) {
+                        cart.reduceProduct(product, quantity - Inventory.getQuantity(product));
+                    }
+                }
+            }
+            else {
+                println("Order placed successfully!");
+            }
+
+            readEnter();
+        }
+    }
+
     @Override
     public UI run() {
         while (true) {
@@ -141,13 +174,17 @@ public class ViewCartUI extends UI {
             println("a/A: Add product into cart");
             if (!products.isEmpty()) {
                 println("r/R: Reduce quantity of products in cart");
+                println("c/C: Check out");
             }
             println("e/E: Exit and return to main menu");
-            var c = noReject().readCharOptions("Select option: ", products.isEmpty() ? "aAeE" : "aArReE");
+            var c = noReject().readCharOptions("Select option: ", products.isEmpty() ? "aAeE" : "aArRcCeE");
+
+            newLine();
 
             switch (c) {
                 case 'a', 'A' -> addProduct();
                 case 'r', 'R' -> reduceProduct();
+                case 'c', 'C' -> checkout();
                 case 'e', 'E' -> { return null; }
                 default -> {}
             }

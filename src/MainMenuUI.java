@@ -39,21 +39,19 @@ public class MainMenuUI extends UI {
 
         println("1) Search product");
         println("2) View cart");
-        println("3) Check out");
-        println("4) View order history");
-        println("5) Log out");
-        println("6) Exit");
+        println("3) View order history");
+        println("4) Log out");
+        println("5) Exit");
         newLine();
 
-        var opt = noReject().readCharOptions("Enter options: ", "123456");
+        var opt = noReject().readCharOptions("Enter options: ", "12345");
 
         switch (opt) {
             case '1' -> new SearchProductUI().run();
             case '2' -> new ViewCartUI(customer).run();
-            case '3' -> new CheckoutUI(customer).run();
-            case '4' -> new ViewHistoryUI(customer).run();
-            case '5' -> { return new LoginUI(); } // log out
-            case '6' -> { return null; } // exit
+            case '3' -> new ViewHistoryUI(customer).run();
+            case '4' -> { return new LoginUI(); } // log out
+            case '5' -> { return null; } // exit
             default -> {}
         }
 
