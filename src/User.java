@@ -1,6 +1,5 @@
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.Writer;
 
 public abstract class User {
     private final String username;
