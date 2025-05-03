@@ -33,9 +33,7 @@ public abstract class User {
         return this.password.equals(password);
     }
 
-    public void saveTo(Writer out) throws IOException {
-        var writer = new BufferedWriter(out);
-
+    public void saveTo(BufferedWriter writer) throws IOException {
         writer.write(username);
         writer.newLine();
         writer.write(password);
