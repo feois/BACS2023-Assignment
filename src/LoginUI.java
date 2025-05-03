@@ -11,7 +11,7 @@ public class LoginUI extends UI {
             username = readString("Enter username: ");
 
             if (!User.validateUsername(username)) {
-                rejectInput("Invalid username!");
+                invalidUsername();
             }
             else if (UserManager.hasUser(username)) {
                 acceptInput();
@@ -60,7 +60,7 @@ public class LoginUI extends UI {
                 }
             }
             else {
-                rejectInput("Invalid username!");
+                invalidUsername();
             }
         }
 

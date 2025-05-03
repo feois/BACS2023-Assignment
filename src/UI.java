@@ -300,6 +300,10 @@ public abstract class UI {
         }
     }
 
+    public final void invalidUsername() {
+        rejectInput("Invalid username! Username must consist of only alphabets, digits, underscore and dash!");
+    }
+
     public final void readEnter() {
         readEnter("Press Enter to continue");
     }

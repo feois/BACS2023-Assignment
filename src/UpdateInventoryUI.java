@@ -32,7 +32,19 @@ public class UpdateInventoryUI extends UI {
 
         println("Current stock count: " + Inventory.getQuantity(product));
 
-        var quantity = noReject().readInt("Enter new quantity: ");
+        int quantity;
+
+        while (true) {
+            quantity = readInt("Enter new quantity: ");
+
+            if (quantity < 0) {
+                invalidInput();
+            }
+            else {
+                acceptInput();
+                break;
+            }
+        }
 
         Inventory.updateQuantity(product, quantity);
 
