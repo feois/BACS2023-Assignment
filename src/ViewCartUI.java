@@ -1,15 +1,18 @@
 import java.util.HashSet;
+import java.util.Map;
 
 public class ViewCartUI extends UI {
     private final Customer customer;
+    private final Cart cart;
+    private final Map<Product, Integer> products;
 
     public ViewCartUI(Customer customer) {
         this.customer = customer;
+        cart = customer.getCart();
+        products = cart.getProducts();
     }
 
     public void addProduct() {
-        var products = customer.cart.getProducts();
-
         Product product;
         int quantityLeft;
 
@@ -61,11 +64,10 @@ public class ViewCartUI extends UI {
             }
         }
 
-        customer.cart.addProduct(product, quantity);
+        cart.addProduct(product, quantity);
     }
 
     public void reduceProduct() {
-        var products = customer.cart.getProducts();
         Product product;
 
         while (true) {
@@ -112,14 +114,14 @@ public class ViewCartUI extends UI {
             }
         }
 
-        customer.cart.reduceProduct(product, quantity);
+        cart.reduceProduct(product, quantity);
     }
 
     private void checkout() {
         println("Checkout");
         newLine();
 
-        println("Amount: " + formatCurrency(customer.cart.calculateAmount()));
+        println("Amount: " + formatCurrency(cart.calculateAmount()));
         newLine();
 
         char c = noReject().readCharOptions("Confirm? yY/nN ", "yYnN");
@@ -131,8 +133,7 @@ public class ViewCartUI extends UI {
                 println("Order failed to proceed due to invalid stock quantity!");
                 println("The cart has been adjusted to fit the current stock quantity, please review the cart again!");
 
-                var products = new HashSet<>(customer.cart.getProducts().keySet());
-                var cart = customer.cart;
+                var products = new HashSet<>(cart.getProducts().keySet());
 
                 for (var product : products) {
                     var quantity = cart.getProducts().get(product);
@@ -157,8 +158,6 @@ public class ViewCartUI extends UI {
 
             println("Cart");
             newLine();
-
-            var products = customer.cart.getProducts();
 
             if (products.isEmpty()) {
                 println("Cart is empty");

@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Customer extends User {
-    public final Cart cart;
+    private final Cart cart;
     private final List<Order> history;
 
     public Customer(String username, String password) {
@@ -14,10 +14,14 @@ public class Customer extends User {
     public Customer(String username, String password, Cart cart, List<Order> history) {
         super(username, password);
 
-        this.cart = cart;
-        this.history = history;
+        this.cart = new Cart(cart);
+        this.history = new ArrayList<>(history);
     }
-    
+
+    public Cart getCart() {
+        return cart;
+    }
+
     public Order checkout() {
         if (cart.getProducts().isEmpty()) {
             return null;

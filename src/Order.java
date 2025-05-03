@@ -5,17 +5,25 @@ import java.time.format.DateTimeFormatter;
 
 public class Order {
     private final Cart cart;
-    public final Instant time;
-    public final double amount;
+    private final Instant time;
+    private final double amount;
 
     public Order(Cart cart, Instant time) {
         this.cart = new Cart(cart); // copy cart
         this.time = time;
-        this.amount = cart.calculateAmount();
+        amount = cart.calculateAmount();
     }
 
     public Cart getCart() {
         return new Cart(cart); // copy cart
+    }
+
+    public Instant getTime() {
+        return time;
+    }
+
+    public double getAmount() {
+        return amount;
     }
 
     public String getLocalDateTime() {

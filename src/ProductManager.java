@@ -6,17 +6,6 @@ public class ProductManager {
     private static final Map<String, Product> productIDs = new HashMap<>();
     private static final Map<Category, List<Product>> categories = new HashMap<>();
 
-    public static void addProduct(Product product) {
-        if (productIDs.containsKey(product.productID)) {
-            throw new IllegalArgumentException("Product ID already exist!");
-        }
-
-        products.add(product);
-        productIDs.put(product.productID, product);
-        categories.putIfAbsent(product.category, new ArrayList<>());
-        categories.get(product.category).add(product);
-    }
-
     public static Product getProduct(String productID) {
         return productIDs.get(productID);
     }
@@ -31,12 +20,23 @@ public class ProductManager {
         return Collections.unmodifiableList(products == null ? new ArrayList<>() : products);
     }
 
+    public static void addProduct(Product product) {
+        if (productIDs.containsKey(product.getProductID())) {
+            throw new IllegalArgumentException("Product ID already exist!");
+        }
+
+        products.add(product);
+        productIDs.put(product.getProductID(), product);
+        categories.putIfAbsent(product.getCategory(), new ArrayList<>());
+        categories.get(product.getCategory()).add(product);
+    }
+
     public static List<Product> searchProduct(String name) {
-        return products.stream().filter(p -> p.productName.contains(name)).toList();
+        return products.stream().filter(p -> p.getProductName().contains(name)).toList();
     }
 
     public static List<Product> searchProduct(String name, Category category) {
-        return searchProduct(name).stream().filter(p -> p.category == category).toList();
+        return searchProduct(name).stream().filter(p -> p.getCategory() == category).toList();
     }
 
     public static void readFrom(Reader in) throws IOException {
@@ -58,13 +58,13 @@ public class ProductManager {
         var writer = new BufferedWriter(out);
 
         for (var prod : getProducts()) {
-            writer.write(prod.productID);
+            writer.write(prod.getProductID());
             writer.newLine();
-            writer.write(prod.productName);
+            writer.write(prod.getProductName());
             writer.newLine();
-            writer.write(prod.description);
+            writer.write(prod.getDescription());
             writer.newLine();
-            writer.write(Double.toString(prod.price));
+            writer.write(Double.toString(prod.getPrice()));
             writer.newLine();
         }
 

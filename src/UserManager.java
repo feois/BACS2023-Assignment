@@ -77,11 +77,8 @@ public class UserManager {
         var writer = new BufferedWriter(out);
 
         for (var user : users.values()) {
-            if (user instanceof Administrator admin) {
-                writer.write(admin.getUsername());
-                writer.newLine();
-                writer.write(admin.getPassword());
-                writer.newLine();
+            if (user instanceof Administrator) {
+                user.saveTo(writer);
             }
         }
 
@@ -93,7 +90,7 @@ public class UserManager {
             cart.getProducts().forEach((product, count) -> {
                 try {
                     writer.write('\t');
-                    writer.write(product.productID);
+                    writer.write(product.getProductID());
                     writer.newLine();
                     writer.write('\t');
                     writer.write(Integer.toString(count));
@@ -114,17 +111,14 @@ public class UserManager {
 
         for (var user : users.values()) {
             if (user instanceof Customer customer) {
-                writer.write(customer.getUsername());
-                writer.newLine();
-                writer.write(customer.getPassword());
-                writer.newLine();
+                user.saveTo(writer);
                 writer.write("Cart");
                 writer.newLine();
 
-                writeCart(writer, customer.cart);
+                writeCart(writer, customer.getCart());
 
                 for (var order : customer.getOrderHistory()) {
-                    writer.write("Order " + order.time);
+                    writer.write("Order " + order.getTime());
                     writer.newLine();
 
                     writeCart(writer, order.getCart());

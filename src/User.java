@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.Writer;
+
 public abstract class User {
     private final String username;
     private final String password;
@@ -25,12 +29,17 @@ public abstract class User {
         return username;
     }
 
-    String getPassword() {
-        return password;
-    }
-
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public void saveTo(Writer out) throws IOException {
+        var writer = new BufferedWriter(out);
+
+        writer.write(username);
+        writer.newLine();
+        writer.write(password);
+        writer.newLine();
     }
 
     public abstract String getUserType();

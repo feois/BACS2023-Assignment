@@ -64,7 +64,7 @@ public class Cart {
             var product = entry.getKey();
             var quantity = entry.getValue();
 
-            amount += product.price * quantity;
+            amount += product.getPrice() * quantity;
         }
 
         return amount;

@@ -5,6 +5,16 @@ public class CategoryManager {
     private static final List<Category> categories = new ArrayList<>();
     private static String categoriesString = null;
 
+    public static Category getCategory(char code) {
+        for (var cat : getCategories()) {
+            if (cat.getCategoryCode() == code) {
+                return cat;
+            }
+        }
+
+        return null;
+    }
+
     public static List<Category> getCategories() {
         return Collections.unmodifiableList(categories);
     }
@@ -21,16 +31,6 @@ public class CategoryManager {
         }
 
         return categoriesString;
-    }
-
-    public static Category getCategory(char code) {
-        for (var cat : getCategories()) {
-            if (cat.getCategoryCode() == code) {
-                return cat;
-            }
-        }
-
-        return null;
     }
 
     public static void addCategory(Category category) {

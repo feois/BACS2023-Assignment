@@ -324,12 +324,11 @@ public abstract class UI {
         newLine();
     }
 
-    @SuppressWarnings("DataFlowIssue")
     public final void printProduct(Product product) {
-        println(product.productID + '\t' + product.productName);
-        println("\tDescription: " + product.description);
-        println("\tCategory:    " + product.category.getCategoryName());
-        println("\tPrice:       " + formatCurrency(product.price));
+        println(product.getProductID() + '\t' + product.getProductName());
+        println("\tDescription: " + product.getDescription());
+        println("\tCategory:    " + product.getCategory().getCategoryName());
+        println("\tPrice:       " + formatCurrency(product.getPrice()));
     }
 
     public static String formatCurrency(Double currency) {

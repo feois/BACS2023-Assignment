@@ -50,7 +50,7 @@ public class ViewHistoryUI extends UI {
 
         println("Order History: Order placed on " + order.getLocalDateTime());
         newLine();
-        println("Total amount: " + formatCurrency(order.amount));
+        println("Total amount: " + formatCurrency(order.getAmount()));
         newLine();
 
         order.getCart().getProducts().forEach(((product, quantity) -> {

@@ -1,9 +1,9 @@
 public class Product {
-    public final String productID;
-    public String productName;
-    public String description;
-    public double price;
-    public final Category category;
+    private final String productID;
+    private final String productName;
+    private final String description;
+    private final Category category;
+    private final double price;
 
     public Product(String productID, String productName, String description, double price) {
         if (!validateID(productID)) {
@@ -32,5 +32,25 @@ public class Product {
         }
 
         return false;
+    }
+
+    public String getProductID() {
+        return productID;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public double getPrice() {
+        return price;
     }
 }
